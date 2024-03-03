@@ -1,4 +1,10 @@
-import React, { createContext, useContext, ReactNode, useState, useMemo } from "react";
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useMemo,
+} from "react";
 
 type Image = {
   id: string;
@@ -14,29 +20,33 @@ type ImageContextProps = {
   setSelectedImage: React.Dispatch<React.SetStateAction<Image | null>>;
 };
 
-type InputContextProps = {
-  inputValue: string[];
-  setInputValue: React.Dispatch<React.SetStateAction<string[]>>;
-};
+const AppContext = createContext<
+  | {
+      imageContext: ImageContextProps;
+    }
+  | undefined
+>(undefined);
 
-const AppContext = createContext<{
-  imageContext: ImageContextProps;
-  inputContext: InputContextProps;
-} | undefined>(undefined);
-
-export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AppProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
-  const [inputValue, setInputValue] = useState<string[]>([]);
 
-  const imageContextValue = useMemo(() => ({ selectedImage, setSelectedImage }), [selectedImage, setSelectedImage]);
-  const inputContextValue = useMemo(() => ({ inputValue, setInputValue }), [inputValue, setInputValue]);
+  const imageContextValue = useMemo(
+    () => ({ selectedImage, setSelectedImage }),
+    [selectedImage, setSelectedImage]
+  );
 
-  const contextValue = useMemo(() => ({ imageContext: imageContextValue, inputContext: inputContextValue }), [
-    imageContextValue,
-    inputContextValue,
-  ]);
+  const contextValue = useMemo(
+    () => ({
+      imageContext: imageContextValue,
+    }),
+    [imageContextValue]
+  );
 
-  return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
+  );
 };
 
 export const useApp = () => {

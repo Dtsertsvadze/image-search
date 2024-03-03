@@ -2,7 +2,6 @@ import Card from "./components/Card";
 import "./styles/Home.css";
 import { useEffect, useMemo, useState } from "react";
 import { searchEngine, fetchPopularImages } from "./store/FetchImages";
-import { useApp } from "./store/AppContext";
 
 type Image = {
   urls: {
@@ -16,25 +15,11 @@ const Home = () => {
   const [images, setImages] = useState<Image[]>([]);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [inputValue, setInputValue] = useState<string>("");
-  const [typingTimeout, setTypingTimeout] = useState<number | null>(null);
-
-  const ctx = useApp();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTotalPages(1);
     setInputValue(e.target.value);
-
-    if (typingTimeout) {
-      clearTimeout(typingTimeout);
-    }
-
-    const newTypingTimeout = setTimeout(() => {
-      ctx.inputContext.setInputValue((prevInputValues) => [...prevInputValues, e.target.value]);
-    }, 1000);
-
-    setTypingTimeout(newTypingTimeout);
   };
-
 
   const handleScroll = () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
@@ -63,12 +48,16 @@ const Home = () => {
             );
 
       setImages((prev) => (totalPages === 1 ? data : [...prev, ...data]));
-      const existingDataString = localStorage.getItem(inputValue);
-      const existingData = existingDataString ? JSON.parse(existingDataString) : [];
+      if (inputValue.trim() !== "") {
+        const existingDataString = localStorage.getItem(inputValue);
+        const existingData = existingDataString
+          ? JSON.parse(existingDataString)
+          : [];
 
-      const newData = [...existingData, ...data];
+        const newData = [...existingData, ...data];
 
-      localStorage.setItem(inputValue, JSON.stringify(newData));
+        localStorage.setItem(inputValue, JSON.stringify(newData));
+      }
     };
 
     const timeoutId = setTimeout(fetchData, 500);
