@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Card from './components/Card';
-import './styles/History.css'; // Import your stylesheet
+import './styles/History.css';
 
 const History = () => {
   const [selectedKey, setSelectedKey] = useState('');
