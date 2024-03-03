@@ -1,0 +1,30 @@
+.nav-bar {
+    width: 100vw;
+    position: fixed;
+    height: 100px;
+    background-color: #1a1a1a;
+    align-items: center;
+    ul {
+        height: 100%;
+        display: flex;
+        gap: 100px;
+        justify-content: center;
+        align-items: center;
+        li {
+            list-style: none;
+            a {
+                text-decoration: none;
+                color: #70a1ff;
+                font-size: 24px;
+                font-weight: 500;
+                transition: 0.2s;
+                &:hover{
+                    color: #4d79ff;
+                }
+                &.active {
+                    color: #2b4d66;
+                }
+            }
+        }
+    }
+}
